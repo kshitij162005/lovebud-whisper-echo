@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { ArrowLeft, Sparkles } from "lucide-react";
+import { ArrowLeft, Sparkles, Heart, Zap, Crown, Star } from "lucide-react";
 import { toast } from "sonner";
 
 interface GirlfriendCreatorProps {
@@ -32,7 +32,10 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
       romance: [50],
       intelligence: [50],
       humor: [50],
-      dominance: [50]
+      dominance: [50],
+      toxicity: [20],
+      clinginess: [40],
+      flirtiness: [60]
     }
   });
   const [loading, setLoading] = useState(false);
@@ -94,83 +97,117 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 text-white">
+    <div className="min-h-screen bg-black text-white relative overflow-x-hidden">
+      {/* Animated background elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-pink-500/10 rounded-full blur-3xl floating"></div>
+        <div className="absolute top-40 right-20 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl floating" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-20 left-1/3 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl floating" style={{animationDelay: '2s'}}></div>
+      </div>
+
       {/* Header */}
-      <div className="flex items-center justify-between p-6 border-b border-white/10">
-        <div className="flex items-center space-x-4">
+      <div className="relative z-50 flex items-center justify-between p-6 border-b border-pink-500/20 backdrop-blur-md bg-black/50">
+        <div className="flex items-center space-x-6">
           <Button 
             variant="ghost" 
             size="icon"
             onClick={onBack}
-            className="text-white hover:text-pink-400 hover:bg-white/10"
+            className="text-white hover:text-pink-400 hover:bg-pink-500/10 transition-all duration-300 hover:scale-110"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-6 w-6" />
           </Button>
-          <h1 className="text-2xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-            Create Your AI Girlfriend
-          </h1>
+          <div>
+            <h1 className="text-4xl font-bold neon-text bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
+              Create Your Dream Girl
+            </h1>
+            <p className="text-gray-300 text-lg mt-2">Design the perfect AI companion tailored to your desires</p>
+          </div>
         </div>
-        <Sparkles className="h-8 w-8 text-pink-400" />
+        <div className="flex items-center space-x-4">
+          <Crown className="h-10 w-10 text-yellow-400 pulse-glow" />
+          <Sparkles className="h-10 w-10 text-pink-400 floating" />
+        </div>
       </div>
 
-      <div className="max-w-4xl mx-auto p-6 space-y-8">
+      <div className="max-w-6xl mx-auto p-6 space-y-12 relative z-10">
+        {/* Preview Section */}
+        <div className="text-center mb-12">
+          <div className="glass-card p-8 max-w-md mx-auto">
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 mx-auto mb-4 pulse-glow"></div>
+            <h3 className="text-2xl font-bold text-white mb-2">{formData.name || "Your AI Girlfriend"}</h3>
+            <p className="text-gray-300">Age: {formData.age[0]} • Preview</p>
+            <div className="flex justify-center mt-4 space-x-2">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Basic Information */}
-        <Card className="bg-white/5 backdrop-blur-sm border-pink-500/20">
+        <Card className="glass-card border-pink-500/30">
           <CardHeader>
-            <CardTitle className="text-pink-400">Basic Information</CardTitle>
+            <CardTitle className="text-3xl font-bold text-pink-400 flex items-center">
+              <Heart className="h-8 w-8 mr-3 pulse-glow" />
+              Basic Information
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-8 p-8">
             <div>
-              <Label htmlFor="name" className="text-gray-300">Name</Label>
+              <Label htmlFor="name" className="text-xl text-gray-300 mb-3 block">What's her name? ✨</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={(e) => setFormData({...formData, name: e.target.value})}
-                placeholder="Enter her name..."
-                className="bg-white/10 border-gray-600 text-white placeholder-gray-400 focus:border-pink-400"
+                placeholder="Enter her beautiful name..."
+                className="text-xl p-4 bg-black/50 border-pink-500/30 text-white placeholder-gray-400 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 transition-all duration-300"
               />
             </div>
 
             <div>
-              <Label className="text-gray-300">Age: {formData.age[0]}</Label>
+              <Label className="text-xl text-gray-300 mb-3 block">Age: {formData.age[0]} 🎂</Label>
               <Slider
                 value={formData.age}
                 onValueChange={(value) => setFormData({...formData, age: value})}
                 max={35}
                 min={18}
                 step={1}
-                className="mt-2"
+                className="mt-4"
               />
+              <div className="flex justify-between text-sm text-gray-400 mt-2">
+                <span>18</span>
+                <span>35</span>
+              </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <Label className="text-gray-300">Ethnicity</Label>
+                <Label className="text-xl text-gray-300 mb-3 block">Ethnicity 🌍</Label>
                 <Select onValueChange={(value) => setFormData({...formData, ethnicity: value})}>
-                  <SelectTrigger className="bg-white/10 border-gray-600 text-white">
-                    <SelectValue placeholder="Select ethnicity" />
+                  <SelectTrigger className="text-lg p-4 bg-black/50 border-pink-500/30 text-white hover:border-pink-400 transition-all duration-300">
+                    <SelectValue placeholder="Choose ethnicity" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-black border-pink-500/30">
                     <SelectItem value="Caucasian">Caucasian</SelectItem>
-                    <SelectItem value="Latina">Latina</SelectItem>
-                    <SelectItem value="Asian">Asian</SelectItem>
-                    <SelectItem value="Ebony">Ebony</SelectItem>
-                    <SelectItem value="Mixed">Mixed</SelectItem>
+                    <SelectItem value="Latina">Latina 🔥</SelectItem>
+                    <SelectItem value="Asian">Asian 🌸</SelectItem>
+                    <SelectItem value="Ebony">Ebony 💎</SelectItem>
+                    <SelectItem value="Mixed">Mixed ✨</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <Label className="text-gray-300">Body Type</Label>
+                <Label className="text-xl text-gray-300 mb-3 block">Body Type 💃</Label>
                 <Select onValueChange={(value) => setFormData({...formData, body_type: value})}>
-                  <SelectTrigger className="bg-white/10 border-gray-600 text-white">
+                  <SelectTrigger className="text-lg p-4 bg-black/50 border-pink-500/30 text-white hover:border-pink-400 transition-all duration-300">
                     <SelectValue placeholder="Select body type" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-black border-pink-500/30">
                     <SelectItem value="Skinny">Skinny</SelectItem>
-                    <SelectItem value="Fit">Fit</SelectItem>
+                    <SelectItem value="Fit">Fit 💪</SelectItem>
                     <SelectItem value="Average">Average</SelectItem>
-                    <SelectItem value="Curvy">Curvy</SelectItem>
+                    <SelectItem value="Curvy">Curvy 🍑</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -179,75 +216,78 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
         </Card>
 
         {/* Appearance */}
-        <Card className="bg-white/5 backdrop-blur-sm border-purple-500/20">
+        <Card className="glass-card border-purple-500/30">
           <CardHeader>
-            <CardTitle className="text-purple-400">Appearance</CardTitle>
+            <CardTitle className="text-3xl font-bold text-purple-400 flex items-center">
+              <Sparkles className="h-8 w-8 mr-3 pulse-glow" />
+              Appearance & Style
+            </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid md:grid-cols-2 gap-4">
+          <CardContent className="space-y-8 p-8">
+            <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <Label className="text-gray-300">Hair Color</Label>
+                <Label className="text-xl text-gray-300 mb-3 block">Hair Color 💇‍♀️</Label>
                 <Select onValueChange={(value) => setFormData({...formData, hair_color: value})}>
-                  <SelectTrigger className="bg-white/10 border-gray-600 text-white">
-                    <SelectValue placeholder="Select hair color" />
+                  <SelectTrigger className="text-lg p-4 bg-black/50 border-purple-500/30 text-white hover:border-purple-400 transition-all duration-300">
+                    <SelectValue placeholder="Choose hair color" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Blonde">Blonde</SelectItem>
-                    <SelectItem value="Brunette">Brunette</SelectItem>
-                    <SelectItem value="Black">Black</SelectItem>
-                    <SelectItem value="Red">Red</SelectItem>
+                  <SelectContent className="bg-black border-purple-500/30">
+                    <SelectItem value="Blonde">Blonde ✨</SelectItem>
+                    <SelectItem value="Brunette">Brunette 🤎</SelectItem>
+                    <SelectItem value="Black">Black 🖤</SelectItem>
+                    <SelectItem value="Red">Red 🔥</SelectItem>
                     <SelectItem value="Brown">Brown</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <Label className="text-gray-300">Hair Style</Label>
+                <Label className="text-xl text-gray-300 mb-3 block">Hair Style 💫</Label>
                 <Select onValueChange={(value) => setFormData({...formData, hair_style: value})}>
-                  <SelectTrigger className="bg-white/10 border-gray-600 text-white">
+                  <SelectTrigger className="text-lg p-4 bg-black/50 border-purple-500/30 text-white hover:border-purple-400 transition-all duration-300">
                     <SelectValue placeholder="Select hair style" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="bg-black border-purple-500/30">
                     <SelectItem value="Long Straight">Long Straight</SelectItem>
-                    <SelectItem value="Long Wavy">Long Wavy</SelectItem>
-                    <SelectItem value="Long Curly">Long Curly</SelectItem>
+                    <SelectItem value="Long Wavy">Long Wavy 🌊</SelectItem>
+                    <SelectItem value="Long Curly">Long Curly 🌀</SelectItem>
                     <SelectItem value="Medium Straight">Medium Straight</SelectItem>
                     <SelectItem value="Medium Wavy">Medium Wavy</SelectItem>
-                    <SelectItem value="Short">Short</SelectItem>
+                    <SelectItem value="Short">Short & Sexy</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-8">
               <div>
-                <Label className="text-gray-300">Face Style</Label>
+                <Label className="text-xl text-gray-300 mb-3 block">Face Style 😍</Label>
                 <Select onValueChange={(value) => setFormData({...formData, face_style: value})}>
-                  <SelectTrigger className="bg-white/10 border-gray-600 text-white">
-                    <SelectValue placeholder="Select face style" />
+                  <SelectTrigger className="text-lg p-4 bg-black/50 border-purple-500/30 text-white hover:border-purple-400 transition-all duration-300">
+                    <SelectValue placeholder="Choose face style" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Natural">Natural</SelectItem>
-                    <SelectItem value="Sexy">Sexy</SelectItem>
-                    <SelectItem value="Cute">Cute</SelectItem>
-                    <SelectItem value="Smiling">Smiling</SelectItem>
-                    <SelectItem value="Elegant">Elegant</SelectItem>
+                  <SelectContent className="bg-black border-purple-500/30">
+                    <SelectItem value="Natural">Natural Beauty</SelectItem>
+                    <SelectItem value="Sexy">Sexy & Sultry 🔥</SelectItem>
+                    <SelectItem value="Cute">Cute & Sweet 🥰</SelectItem>
+                    <SelectItem value="Smiling">Always Smiling 😊</SelectItem>
+                    <SelectItem value="Elegant">Elegant & Classy 👑</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <Label className="text-gray-300">Clothing Style</Label>
+                <Label className="text-xl text-gray-300 mb-3 block">Clothing Style 👗</Label>
                 <Select onValueChange={(value) => setFormData({...formData, clothing_style: value})}>
-                  <SelectTrigger className="bg-white/10 border-gray-600 text-white">
-                    <SelectValue placeholder="Select clothing style" />
+                  <SelectTrigger className="text-lg p-4 bg-black/50 border-purple-500/30 text-white hover:border-purple-400 transition-all duration-300">
+                    <SelectValue placeholder="Select style" />
                   </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Casual">Casual</SelectItem>
-                    <SelectItem value="Elegant">Elegant</SelectItem>
-                    <SelectItem value="Sporty">Sporty</SelectItem>
-                    <SelectItem value="Cute">Cute</SelectItem>
-                    <SelectItem value="Classy">Classy</SelectItem>
+                  <SelectContent className="bg-black border-purple-500/30">
+                    <SelectItem value="Casual">Casual & Comfy</SelectItem>
+                    <SelectItem value="Elegant">Elegant & Sophisticated</SelectItem>
+                    <SelectItem value="Sporty">Sporty & Active 🏃‍♀️</SelectItem>
+                    <SelectItem value="Cute">Cute & Girly 🎀</SelectItem>
+                    <SelectItem value="Classy">Classy & Chic</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -255,17 +295,32 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
           </CardContent>
         </Card>
 
-        {/* Personality */}
-        <Card className="bg-white/5 backdrop-blur-sm border-blue-500/20">
+        {/* Personality Traits */}
+        <Card className="glass-card border-blue-500/30">
           <CardHeader>
-            <CardTitle className="text-blue-400">Personality Traits</CardTitle>
+            <CardTitle className="text-3xl font-bold text-blue-400 flex items-center">
+              <Zap className="h-8 w-8 mr-3 pulse-glow" />
+              Personality & Behavior
+            </CardTitle>
+            <p className="text-gray-300 text-lg mt-2">Fine-tune her personality to match your perfect companion</p>
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-10 p-8">
             {Object.entries(formData.personality_traits).map(([trait, value]) => (
-              <div key={trait}>
-                <Label className="text-gray-300 capitalize">
-                  {trait}: {value[0]}%
-                </Label>
+              <div key={trait} className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <Label className="text-xl text-gray-300 capitalize flex items-center">
+                    {trait === 'playfulness' && '🎮'}
+                    {trait === 'romance' && '💕'}
+                    {trait === 'intelligence' && '🧠'}
+                    {trait === 'humor' && '😄'}
+                    {trait === 'dominance' && '👑'}
+                    {trait === 'toxicity' && '⚡'}
+                    {trait === 'clinginess' && '🤗'}
+                    {trait === 'flirtiness' && '😘'}
+                    <span className="ml-2">{trait.replace('_', ' ')}</span>
+                  </Label>
+                  <span className="text-2xl font-bold text-pink-400">{value[0]}%</span>
+                </div>
                 <Slider
                   value={value}
                   onValueChange={(newValue) => setFormData({
@@ -278,23 +333,30 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
                   max={100}
                   min={0}
                   step={5}
-                  className="mt-2"
+                  className="mt-4"
                 />
+                <div className="flex justify-between text-sm text-gray-400">
+                  <span>Low</span>
+                  <span>High</span>
+                </div>
               </div>
             ))}
           </CardContent>
         </Card>
 
         {/* Create Button */}
-        <div className="text-center">
+        <div className="text-center pb-12">
           <Button 
             onClick={handleCreate}
             disabled={loading}
-            className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-lg px-12 py-4"
+            className="glow-button text-2xl px-16 py-8 text-white font-bold"
           >
-            {loading ? "Creating..." : "Create My AI Girlfriend"}
-            <Sparkles className="ml-2 h-5 w-5" />
+            {loading ? "Creating Your Dream Girl..." : "Create My Perfect AI Girlfriend 💖"}
+            <Sparkles className="ml-4 h-8 w-8" />
           </Button>
+          <p className="text-gray-400 mt-4 text-lg">
+            ✨ Your AI girlfriend will be ready for passionate conversations in seconds!
+          </p>
         </div>
       </div>
     </div>

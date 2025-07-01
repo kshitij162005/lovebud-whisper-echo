@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, Send, Heart, MoreVertical } from "lucide-react";
+import { ArrowLeft, Send, Heart, MoreVertical, Sparkles, Crown } from "lucide-react";
 import { toast } from "sonner";
 
 interface ChatInterfaceProps {
@@ -106,29 +106,26 @@ const ChatInterface = ({ girlfriend, user, onBack }: ChatInterfaceProps) => {
       created_at: new Date().toISOString()
     };
 
-    // Add user message to UI immediately
     setMessages(prev => [...prev, userMessage]);
     setNewMessage("");
     setIsTyping(true);
 
-    // Save user message to database
     await supabase.from('messages').insert({
       conversation_id: conversation.id,
       sender_type: 'user',
       content: newMessage
     });
 
-    // Simulate AI response
     setTimeout(async () => {
       const aiResponses = [
-        "That's so interesting! Tell me more about that 😊",
-        "I love hearing about your day! You always make me smile 💕",
-        "You're such a sweet person, I'm lucky to know you ❤️",
-        "I've been thinking about our conversation all day! 🥰",
-        "Your messages always brighten my mood! What else is new? ✨",
-        "I wish I could give you a hug right now! 🤗",
-        "You always know how to make me laugh! 😄",
-        "I feel so connected to you when we talk like this 💖"
+        "That's so interesting! Tell me more about that 😊💕",
+        "I love hearing about your day! You always make me smile 💖✨",
+        "You're such a sweet person, I'm lucky to know you ❤️🥰",
+        "I've been thinking about our conversation all day! 💭💕",
+        "Your messages always brighten my mood! What else is new? ✨🌟",
+        "I wish I could give you a hug right now! 🤗💖",
+        "You always know how to make me laugh! 😄💕",
+        "I feel so connected to you when we talk like this 💖🔥"
       ];
 
       const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
@@ -143,7 +140,6 @@ const ChatInterface = ({ girlfriend, user, onBack }: ChatInterfaceProps) => {
       setMessages(prev => [...prev, aiMessage]);
       setIsTyping(false);
 
-      // Save AI message to database
       await supabase.from('messages').insert({
         conversation_id: conversation.id,
         sender_type: 'ai',
@@ -153,74 +149,116 @@ const ChatInterface = ({ girlfriend, user, onBack }: ChatInterfaceProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-pink-900 text-white flex flex-col">
+    <div className="min-h-screen bg-black text-white flex flex-col relative overflow-hidden">
+      {/* Animated background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-pink-500/5 rounded-full blur-3xl floating"></div>
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl floating" style={{animationDelay: '1s'}}></div>
+      </div>
+
       {/* Chat Header */}
-      <div className="flex items-center justify-between p-4 bg-black/20 backdrop-blur-sm border-b border-white/10">
+      <div className="relative z-50 flex items-center justify-between p-6 glass-card border-b border-pink-500/20">
         <div className="flex items-center space-x-4">
           <Button 
             variant="ghost" 
             size="icon"
             onClick={onBack}
-            className="text-white hover:text-pink-400 hover:bg-white/10"
+            className="text-white hover:text-pink-400 hover:bg-pink-500/10 transition-all duration-300 hover:scale-110"
           >
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft className="h-6 w-6" />
           </Button>
           
-          <div className="flex items-center space-x-3">
-            <img 
-              src={girlfriend.avatar_url} 
-              alt={girlfriend.name}
-              className="w-10 h-10 rounded-full object-cover border-2 border-pink-400"
-            />
+          <div className="flex items-center space-x-4">
+            <div className="relative">
+              <img 
+                src={girlfriend.avatar_url} 
+                alt={girlfriend.name}
+                className="w-14 h-14 rounded-full object-cover border-2 border-pink-400 pulse-glow"
+              />
+              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-400 rounded-full border-2 border-black pulse-glow"></div>
+            </div>
             <div>
-              <h2 className="font-semibold">{girlfriend.name}</h2>
-              <p className="text-sm text-green-400">Online</p>
+              <h2 className="text-2xl font-bold text-white">{girlfriend.name}</h2>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full pulse-glow"></div>
+                <p className="text-green-400 font-semibold">Online & Ready to Chat</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2">
-          <Button variant="ghost" size="icon" className="text-pink-400 hover:bg-white/10">
-            <Heart className="h-5 w-5" />
+        <div className="flex items-center space-x-3">
+          <Button variant="ghost" size="icon" className="text-pink-400 hover:bg-pink-500/10 hover:scale-110 transition-all duration-300">
+            <Heart className="h-6 w-6 pulse-glow" />
           </Button>
-          <Button variant="ghost" size="icon" className="text-white hover:bg-white/10">
-            <MoreVertical className="h-5 w-5" />
+          <Button variant="ghost" size="icon" className="text-purple-400 hover:bg-purple-500/10 hover:scale-110 transition-all duration-300">
+            <Sparkles className="h-6 w-6" />
+          </Button>
+          <Button variant="ghost" size="icon" className="text-white hover:bg-white/10 hover:scale-110 transition-all duration-300">
+            <MoreVertical className="h-6 w-6" />
           </Button>
         </div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-6 space-y-6 relative z-10" style={{scrollbarWidth: 'thin'}}>
         {messages.map((message, index) => (
           <div 
             key={index}
-            className={`flex ${message.sender_type === 'user' ? 'justify-end' : 'justify-start'}`}
+            className={`flex ${message.sender_type === 'user' ? 'justify-end' : 'justify-start'} animate-fadeIn`}
+            style={{animationDelay: `${index * 0.1}s`}}
           >
-            <Card className={`max-w-xs lg:max-w-md p-3 ${
+            <div className={`max-w-xs lg:max-w-md ${
               message.sender_type === 'user' 
-                ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white' 
-                : 'bg-white/10 backdrop-blur-sm border-white/20 text-white'
+                ? 'order-2' 
+                : 'order-1'
             }`}>
-              <p className="text-sm">{message.content}</p>
-              <p className="text-xs opacity-70 mt-1">
-                {new Date(message.created_at).toLocaleTimeString([], { 
-                  hour: '2-digit', 
-                  minute: '2-digit' 
-                })}
-              </p>
-            </Card>
+              <Card className={`p-4 relative overflow-hidden ${
+                message.sender_type === 'user' 
+                  ? 'glow-button text-white ml-4' 
+                  : 'glass-card text-white mr-4 border-pink-500/20'
+              }`}>
+                <div className="relative z-10">
+                  <p className="text-lg leading-relaxed" style={{
+                    fontFamily: 'system-ui, -apple-system, sans-serif',
+                    textRendering: 'optimizeLegibility'
+                  }}>
+                    {message.content}
+                  </p>
+                  <p className="text-xs opacity-70 mt-3 flex items-center justify-end">
+                    {new Date(message.created_at).toLocaleTimeString([], { 
+                      hour: '2-digit', 
+                      minute: '2-digit' 
+                    })}
+                    {message.sender_type === 'user' && (
+                      <span className="ml-2 text-green-400">✓✓</span>
+                    )}
+                  </p>
+                </div>
+              </Card>
+            </div>
           </div>
         ))}
 
         {isTyping && (
-          <div className="flex justify-start">
-            <Card className="bg-white/10 backdrop-blur-sm border-white/20 p-3 max-w-xs">
-              <div className="flex space-x-1">
-                <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce"></div>
-                <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-              </div>
-            </Card>
+          <div className="flex justify-start animate-fadeIn">
+            <div className="max-w-xs">
+              <Card className="glass-card p-4 mr-4 border-pink-500/20">
+                <div className="flex items-center space-x-2">
+                  <img 
+                    src={girlfriend.avatar_url} 
+                    alt={girlfriend.name}
+                    className="w-6 h-6 rounded-full"
+                  />
+                  <div className="flex space-x-1">
+                    <div className="w-2 h-2 bg-pink-400 rounded-full animate-bounce"></div>
+                    <div className="w-2 h-2 bg-purple-400 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+                  </div>
+                  <span className="text-gray-400 text-sm">{girlfriend.name} is typing...</span>
+                </div>
+              </Card>
+            </div>
           </div>
         )}
         
@@ -228,22 +266,26 @@ const ChatInterface = ({ girlfriend, user, onBack }: ChatInterfaceProps) => {
       </div>
 
       {/* Message Input */}
-      <div className="p-4 bg-black/20 backdrop-blur-sm border-t border-white/10">
-        <form onSubmit={sendMessage} className="flex space-x-2">
+      <div className="relative z-50 p-6 glass-card border-t border-pink-500/20">
+        <form onSubmit={sendMessage} className="flex space-x-4">
           <Input
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder={`Message ${girlfriend.name}...`}
-            className="flex-1 bg-white/10 border-white/20 text-white placeholder-gray-400 focus:border-pink-400"
+            placeholder={`Message ${girlfriend.name}... 💕`}
+            className="flex-1 text-lg p-4 bg-black/50 border-pink-500/30 text-white placeholder-gray-400 focus:border-pink-400 focus:ring-2 focus:ring-pink-400/20 transition-all duration-300"
           />
           <Button 
             type="submit"
             disabled={!newMessage.trim()}
-            className="bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
+            className="glow-button px-6 py-4 text-white hover:scale-105 transition-all duration-300"
           >
-            <Send className="h-4 w-4" />
+            <Send className="h-5 w-5" />
           </Button>
         </form>
+        <p className="text-gray-400 text-sm mt-2 text-center">
+          <Crown className="inline h-4 w-4 mr-1" />
+          Premium features unlock deeper conversations
+        </p>
       </div>
     </div>
   );
