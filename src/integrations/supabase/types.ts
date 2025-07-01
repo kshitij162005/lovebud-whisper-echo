@@ -9,7 +9,305 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      ai_girlfriends: {
+        Row: {
+          age: number | null
+          avatar_url: string | null
+          behavior_settings: Json | null
+          body_type: string | null
+          clothing_style: string | null
+          created_at: string | null
+          ethnicity: string | null
+          face_style: string | null
+          hair_color: string | null
+          hair_style: string | null
+          id: string
+          is_active: boolean | null
+          is_template: boolean | null
+          name: string
+          personality_traits: Json | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          age?: number | null
+          avatar_url?: string | null
+          behavior_settings?: Json | null
+          body_type?: string | null
+          clothing_style?: string | null
+          created_at?: string | null
+          ethnicity?: string | null
+          face_style?: string | null
+          hair_color?: string | null
+          hair_style?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_template?: boolean | null
+          name: string
+          personality_traits?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          age?: number | null
+          avatar_url?: string | null
+          behavior_settings?: Json | null
+          body_type?: string | null
+          clothing_style?: string | null
+          created_at?: string | null
+          ethnicity?: string | null
+          face_style?: string | null
+          hair_color?: string | null
+          hair_style?: string | null
+          id?: string
+          is_active?: boolean | null
+          is_template?: boolean | null
+          name?: string
+          personality_traits?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      conversations: {
+        Row: {
+          created_at: string | null
+          girlfriend_id: string
+          id: string
+          last_message_at: string | null
+          title: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          girlfriend_id: string
+          id?: string
+          last_message_at?: string | null
+          title?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          girlfriend_id?: string
+          id?: string
+          last_message_at?: string | null
+          title?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_girlfriend_id_fkey"
+            columns: ["girlfriend_id"]
+            isOneToOne: false
+            referencedRelation: "ai_girlfriends"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      daily_rewards: {
+        Row: {
+          claim_date: string
+          created_at: string | null
+          id: string
+          streak_day: number
+          tokens_earned: number
+          user_id: string
+        }
+        Insert: {
+          claim_date: string
+          created_at?: string | null
+          id?: string
+          streak_day: number
+          tokens_earned: number
+          user_id: string
+        }
+        Update: {
+          claim_date?: string
+          created_at?: string | null
+          id?: string
+          streak_day?: number
+          tokens_earned?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          content: string
+          conversation_id: string
+          created_at: string | null
+          id: string
+          message_type: string | null
+          metadata: Json | null
+          sender_type: string
+        }
+        Insert: {
+          content: string
+          conversation_id: string
+          created_at?: string | null
+          id?: string
+          message_type?: string | null
+          metadata?: Json | null
+          sender_type: string
+        }
+        Update: {
+          content?: string
+          conversation_id?: string
+          created_at?: string | null
+          id?: string
+          message_type?: string | null
+          metadata?: Json | null
+          sender_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          daily_streak: number | null
+          email: string | null
+          id: string
+          last_daily_claim: string | null
+          referral_code: string | null
+          referred_by: string | null
+          subscription_tier: string | null
+          tokens: number | null
+          updated_at: string | null
+          user_id: string
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          daily_streak?: number | null
+          email?: string | null
+          id?: string
+          last_daily_claim?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
+          subscription_tier?: string | null
+          tokens?: number | null
+          updated_at?: string | null
+          user_id: string
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          daily_streak?: number | null
+          email?: string | null
+          id?: string
+          last_daily_claim?: string | null
+          referral_code?: string | null
+          referred_by?: string | null
+          subscription_tier?: string | null
+          tokens?: number | null
+          updated_at?: string | null
+          user_id?: string
+          username?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_referred_by_fkey"
+            columns: ["referred_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      referrals: {
+        Row: {
+          created_at: string | null
+          id: string
+          referred_id: string
+          referrer_id: string
+          tokens_earned: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          referred_id: string
+          referrer_id: string
+          tokens_earned?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          referred_id?: string
+          referrer_id?: string
+          tokens_earned?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "referrals_referred_id_fkey"
+            columns: ["referred_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "referrals_referrer_id_fkey"
+            columns: ["referrer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      whatsapp_data: {
+        Row: {
+          conversation_patterns: Json | null
+          created_at: string | null
+          girlfriend_id: string | null
+          id: string
+          inside_jokes: Json | null
+          interests: Json | null
+          nicknames: Json | null
+          typing_style: Json | null
+          user_id: string
+        }
+        Insert: {
+          conversation_patterns?: Json | null
+          created_at?: string | null
+          girlfriend_id?: string | null
+          id?: string
+          inside_jokes?: Json | null
+          interests?: Json | null
+          nicknames?: Json | null
+          typing_style?: Json | null
+          user_id: string
+        }
+        Update: {
+          conversation_patterns?: Json | null
+          created_at?: string | null
+          girlfriend_id?: string | null
+          id?: string
+          inside_jokes?: Json | null
+          interests?: Json | null
+          nicknames?: Json | null
+          typing_style?: Json | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "whatsapp_data_girlfriend_id_fkey"
+            columns: ["girlfriend_id"]
+            isOneToOne: false
+            referencedRelation: "ai_girlfriends"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
