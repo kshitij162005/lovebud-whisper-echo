@@ -10,6 +10,7 @@ import AIGirlfriendCard from "@/components/AIGirlfriendCard";
 import ChatInterface from "@/components/ChatInterface";
 import GirlfriendCreator from "@/components/GirlfriendCreator";
 import GirlfriendModal from "@/components/GirlfriendModal";
+import OnboardingModal from "@/components/OnboardingModal";
 import { useFavorites } from "@/hooks/useFavorites";
 
 interface DashboardProps {
