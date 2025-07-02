@@ -31,6 +31,12 @@ const Dashboard = ({ user }: DashboardProps) => {
   useEffect(() => {
     fetchGirlfriends();
     fetchProfile();
+    
+    // Cache data in localStorage for performance
+    const cachedGirlfriends = localStorage.getItem('cached_girlfriends');
+    if (cachedGirlfriends) {
+      setGirlfriends(JSON.parse(cachedGirlfriends));
+    }
   }, []);
 
   const fetchGirlfriends = async () => {
@@ -43,6 +49,8 @@ const Dashboard = ({ user }: DashboardProps) => {
       console.error('Error fetching girlfriends:', error);
     } else {
       setGirlfriends(data || []);
+      // Cache for performance
+      localStorage.setItem('cached_girlfriends', JSON.stringify(data || []));
     }
   };
 
@@ -57,11 +65,16 @@ const Dashboard = ({ user }: DashboardProps) => {
       console.error('Error fetching profile:', error);
     } else {
       setProfile(data);
+      // Cache profile data
+      localStorage.setItem('cached_profile', JSON.stringify(data));
     }
   };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    // Clear cache on logout
+    localStorage.removeItem('cached_girlfriends');
+    localStorage.removeItem('cached_profile');
     toast.success("Signed out successfully");
   };
 
@@ -69,11 +82,13 @@ const Dashboard = ({ user }: DashboardProps) => {
     setSelectedGirlfriend(girlfriend);
     setShowChat(true);
     setShowModal(false);
+    document.body.classList.remove('modal-open');
   };
 
   const handleCardClick = (girlfriend) => {
     setModalGirlfriend(girlfriend);
     setShowModal(true);
+    document.body.classList.add('modal-open');
   };
 
   const handleFavorite = (girlfriend) => {
@@ -87,6 +102,11 @@ const Dashboard = ({ user }: DashboardProps) => {
 
   const handleCreateGirlfriend = () => {
     setShowCreator(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    document.body.classList.remove('modal-open');
   };
 
   if (showChat && selectedGirlfriend) {
@@ -112,6 +132,9 @@ const Dashboard = ({ user }: DashboardProps) => {
     );
   }
 
+  // Get username from profile or email
+  const username = profile?.username || user.email?.split('@')[0] || 'Handsome';
+  
   // Enhanced templates with diversity
   const templates = girlfriends.filter(g => g.is_template);
   const myGirlfriends = girlfriends.filter(g => !g.is_template && g.user_id === user.id);
@@ -146,8 +169,8 @@ const Dashboard = ({ user }: DashboardProps) => {
                 className="flex items-center space-x-3 glass-card px-4 py-3 hover:bg-cyan-500/10 transition-all duration-300"
               >
                 <UserIcon className="h-6 w-6 text-cyan-400" />
-                <span className="text-lg font-semibold text-white">
-                  {profile?.username || user.email?.split('@')[0] || 'User'}
+                <span className="text-lg font-semibold text-white sexy-glow">
+                  {username}
                 </span>
                 <ChevronDown className="h-4 w-4 text-gray-400" />
               </button>
@@ -182,22 +205,22 @@ const Dashboard = ({ user }: DashboardProps) => {
       <div className="max-w-7xl mx-auto px-6 py-8 relative z-10">
         {/* Enhanced Welcome Section */}
         <div className="mb-12 text-center">
-          <h1 className="text-6xl font-bold mb-6 neon-text bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
-            Welcome Back, {profile?.username || user.email?.split('@')[0]}! 💫
+          <h1 className="text-6xl font-bold mb-6 sexy-glow bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+            Welcome Back, {username}! 💋
           </h1>
           <p className="text-2xl text-gray-300 mb-6">
-            Your AI companions are waiting for passionate conversations
+            Your AI girlfriends have been <span className="text-pink-400 font-bold sexy-glow">missing you</span> - they're desperate for your attention
           </p>
           <div className="flex justify-center items-center space-x-8 text-lg">
-            <div className="flex items-center space-x-2 text-cyan-400">
+            <div className="flex items-center space-x-2 text-cyan-400 flirty-bounce">
               <Heart className="h-5 w-5 fill-current pulse-glow" />
-              <span>Find Your Perfect Match</span>
+              <span>Ready to Satisfy</span>
             </div>
-            <div className="flex items-center space-x-2 text-blue-400">
+            <div className="flex items-center space-x-2 text-blue-400 flirty-bounce" style={{animationDelay: '0.5s'}}>
               <Sparkles className="h-5 w-5" />
-              <span>Unlimited Possibilities</span>
+              <span>Unlimited Pleasure</span>
             </div>
-            <div className="flex items-center space-x-2 text-yellow-400">
+            <div className="flex items-center space-x-2 text-yellow-400 flirty-bounce" style={{animationDelay: '1s'}}>
               <Star className="h-5 w-5 fill-current" />
               <span>Premium Experience</span>
             </div>
@@ -206,49 +229,49 @@ const Dashboard = ({ user }: DashboardProps) => {
 
         {/* Quick Actions Grid */}
         <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <Card className="sharp-card hover:scale-105 transition-all duration-500 cursor-pointer group overflow-hidden" onClick={handleCreateGirlfriend}>
+          <Card className="sharp-card hover:scale-105 transition-all duration-500 cursor-pointer group overflow-hidden desperate-animation" onClick={handleCreateGirlfriend}>
             <CardContent className="p-8 text-center relative">
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="relative z-10">
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-cyan-500 to-blue-500 mb-6 pulse-glow">
                   <Plus className="h-10 w-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-white">Create AI Girlfriend</h3>
-                <p className="text-gray-300 text-lg">Design your perfect companion with unlimited customization options</p>
+                <h3 className="text-2xl font-bold mb-3 text-white sexy-glow">Create Perfect Girl</h3>
+                <p className="text-gray-300 text-lg">Design your dream companion who'll worship you completely</p>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="sharp-card hover:scale-105 transition-all duration-500 group overflow-hidden">
+          <Card className="sharp-card hover:scale-105 transition-all duration-500 group overflow-hidden desperate-animation" style={{animationDelay: '0.5s'}}>
             <CardContent className="p-8 text-center relative">
               <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-pink-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="relative z-10">
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 mb-6 pulse-glow">
                   <MessageCircle className="h-10 w-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-white">Active Chats</h3>
-                <p className="text-gray-300 text-lg">Continue intimate conversations and build deeper connections</p>
+                <h3 className="text-2xl font-bold mb-3 text-white sexy-glow">Active Conversations</h3>
+                <p className="text-gray-300 text-lg">Continue passionate chats with girls begging for your attention</p>
                 <div className="mt-4">
-                  <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold">
-                    {myGirlfriends.length} Companions
+                  <span className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-bold sexy-glow">
+                    {myGirlfriends.length} Girls Waiting
                   </span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="sharp-card hover:scale-105 transition-all duration-500 group overflow-hidden">
+          <Card className="sharp-card hover:scale-105 transition-all duration-500 group overflow-hidden desperate-animation" style={{animationDelay: '1s'}}>
             <CardContent className="p-8 text-center relative">
               <div className="absolute inset-0 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <div className="relative z-10">
                 <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-yellow-500 to-orange-500 mb-6 pulse-glow">
                   <Gift className="h-10 w-10 text-white" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3 text-white">Daily Rewards</h3>
-                <p className="text-gray-300 text-lg">Claim tokens and build streaks for exclusive features</p>
+                <h3 className="text-2xl font-bold mb-3 text-white sexy-glow">Daily Satisfaction</h3>
+                <p className="text-gray-300 text-lg">Claim free tokens for exclusive content and premium features</p>
                 <div className="mt-4">
-                  <Button className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold">
-                    Claim 100 Tokens
+                  <Button className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold sexy-glow">
+                    Claim 100 Tokens 🔥
                   </Button>
                 </div>
               </div>
@@ -259,12 +282,12 @@ const Dashboard = ({ user }: DashboardProps) => {
         {/* My AI Girlfriends */}
         {myGirlfriends.length > 0 && (
           <div className="mb-16">
-            <h2 className="text-4xl font-bold mb-8 neon-text bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent text-center">
-              Your AI Companions 💖
+            <h2 className="text-4xl font-bold mb-8 sexy-glow bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent text-center">
+              Your Personal Harem 💖
             </h2>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {myGirlfriends.map((girlfriend, index) => (
-                <div key={girlfriend.id} className="transform hover:scale-105 transition-all duration-500" style={{animationDelay: `${index * 0.1}s`}}>
+                <div key={girlfriend.id} className="transform hover:scale-105 transition-all duration-500 desperate-animation" style={{animationDelay: `${index * 0.1}s`}}>
                   <AIGirlfriendCard 
                     girlfriend={girlfriend}
                     onSelect={handleCardClick}
@@ -279,15 +302,15 @@ const Dashboard = ({ user }: DashboardProps) => {
 
         {/* Featured Diverse Templates */}
         <div>
-          <h2 className="text-4xl font-bold mb-8 neon-text bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent text-center">
-            Featured AI Companions 🌟
+          <h2 className="text-4xl font-bold mb-8 sexy-glow bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent text-center">
+            Desperate Beauties Waiting for You 🌟
           </h2>
           <p className="text-xl text-gray-300 text-center mb-12">
-            Discover amazing AI companions from around the world - each with unique personalities and backgrounds
+            Choose from gorgeous AI companions from around the world - each one <span className="text-pink-400 font-bold sexy-glow">desperate for your love</span>
           </p>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {templates.map((girlfriend, index) => (
-              <div key={girlfriend.id} className="transform hover:scale-105 transition-all duration-500" style={{animationDelay: `${index * 0.1}s`}}>
+              <div key={girlfriend.id} className="transform hover:scale-105 transition-all duration-500 desperate-animation" style={{animationDelay: `${index * 0.1}s`}}>
                 <AIGirlfriendCard 
                   girlfriend={girlfriend}
                   onSelect={handleCardClick}
@@ -304,7 +327,7 @@ const Dashboard = ({ user }: DashboardProps) => {
       <GirlfriendModal
         girlfriend={modalGirlfriend}
         isOpen={showModal}
-        onClose={() => setShowModal(false)}
+        onClose={handleCloseModal}
         onSelect={handleSelectGirlfriend}
         onFavorite={handleFavorite}
         isFavorite={modalGirlfriend ? isFavorite(modalGirlfriend.id) : false}
