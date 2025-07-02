@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,7 +10,7 @@ import FlirtyPopup from "@/components/FlirtyPopup";
 
 const LandingPage = () => {
   const [showAuth, setShowAuth] = useState(false);
-  const [authMode, setAuthMode<'login' | 'signup'>('signup');
+  const [authMode, setAuthMode] = useState<'login' | 'signup'>('signup');
   const [selectedGirlfriend, setSelectedGirlfriend] = useState(null);
   const [showModal, setShowModal] = useState(false);
 

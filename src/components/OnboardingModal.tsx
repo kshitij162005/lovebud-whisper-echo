@@ -151,7 +151,7 @@ const OnboardingModal = ({ isOpen, onClose, user }: OnboardingModalProps) => {
                     <Input
                       id="height"
                       type="text"
-                      placeholder="e.g., 5'10\""
+                      placeholder="e.g., 5'10&quot;"
                       value={formData.height}
                       onChange={(e) => handleInputChange('height', e.target.value)}
                       className="bg-white/5 border-gray-600 text-white placeholder-gray-400 focus:border-blue-400"
