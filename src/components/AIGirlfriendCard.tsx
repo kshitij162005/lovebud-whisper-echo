@@ -35,10 +35,10 @@ const AIGirlfriendCard = ({ girlfriend, onSelect, onFavorite, isFavorite = false
 
   return (
     <Card 
-      className="sharp-card border-cyan-500/30 hover:border-cyan-400/60 transition-all duration-500 overflow-hidden group relative cursor-pointer"
+      className="luxury-card border-blue-500/20 hover:border-blue-400/40 transition-all duration-500 overflow-hidden group relative cursor-pointer"
       onClick={handleCardClick}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
       
       <div className="relative">
         <div className="relative overflow-hidden">
@@ -51,16 +51,16 @@ const AIGirlfriendCard = ({ girlfriend, onSelect, onFavorite, isFavorite = false
           
           {/* Status Badge */}
           <div className="absolute top-4 left-4">
-            <div className="flex items-center space-x-2 glass-card px-3 py-1">
-              <div className="w-2 h-2 bg-green-400 rounded-full pulse-glow"></div>
+            <div className="flex items-center space-x-2 glass-panel px-3 py-1 rounded-full">
+              <div className="w-2 h-2 bg-green-400 rounded-full subtle-pulse"></div>
               <span className="text-green-400 text-sm font-semibold">Online</span>
             </div>
           </div>
 
           {/* Mood Badge */}
           <div className="absolute top-4 right-4">
-            <div className="glass-card px-4 py-2">
-              <span className="text-cyan-300 text-sm font-semibold capitalize flex items-center">
+            <div className="glass-panel px-4 py-2 rounded-full">
+              <span className="text-blue-300 text-sm font-semibold capitalize flex items-center">
                 <Sparkles className="h-4 w-4 mr-1" />
                 {girlfriend.personality_traits.mood}
               </span>
@@ -69,12 +69,12 @@ const AIGirlfriendCard = ({ girlfriend, onSelect, onFavorite, isFavorite = false
 
           {/* Name and Age */}
           <div className="absolute bottom-6 left-4 right-4">
-            <h3 className="text-3xl font-bold text-white mb-2 neon-text">{girlfriend.name}</h3>
+            <h3 className="text-3xl font-bold text-white mb-2 elegant-text">{girlfriend.name}</h3>
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-cyan-300 text-lg font-semibold">{girlfriend.age} years old</p>
+                <p className="text-blue-300 text-lg font-semibold">{girlfriend.age} years old</p>
                 {girlfriend.ethnicity && (
-                  <p className="text-blue-300 text-sm">{girlfriend.ethnicity}</p>
+                  <p className="text-cyan-300 text-sm">{girlfriend.ethnicity}</p>
                 )}
               </div>
               <div className="flex items-center space-x-1">
@@ -93,7 +93,7 @@ const AIGirlfriendCard = ({ girlfriend, onSelect, onFavorite, isFavorite = false
             {girlfriend.personality_traits.traits.map((trait, index) => (
               <span 
                 key={index}
-                className="bg-gradient-to-r from-cyan-500/30 to-blue-500/30 text-cyan-300 px-4 py-2 rounded-full text-sm border border-cyan-500/30 hover:border-cyan-400/50 transition-all duration-300 font-semibold"
+                className="bg-gradient-to-r from-blue-500/30 to-cyan-500/30 text-blue-300 px-4 py-2 rounded-full text-sm border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300 font-semibold"
               >
                 {trait}
               </span>
@@ -104,19 +104,19 @@ const AIGirlfriendCard = ({ girlfriend, onSelect, onFavorite, isFavorite = false
         {showActions && (
           <div className="flex gap-4">
             <Button 
-              className="glow-button flex-1 text-white font-bold py-3 hover:scale-105 transition-all duration-300"
+              className="luxury-button flex-1 text-white font-bold py-3 hover:scale-105 transition-all duration-300"
             >
               <MessageCircle className="w-5 h-5 mr-2" />
-              View Profile 💫
+              View Profile
             </Button>
             <Button 
               variant="outline" 
               size="icon"
               onClick={handleFavoriteClick}
-              className={`border-2 transition-all duration-300 p-3 favorite-heart ${
+              className={`border-2 transition-all duration-300 p-3 favorite-heart rounded-xl ${
                 isFavorite 
                   ? 'border-pink-400 text-pink-400 bg-pink-400/10 active' 
-                  : 'border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-black hover:scale-110'
+                  : 'border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-black hover:scale-110'
               }`}
             >
               <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
