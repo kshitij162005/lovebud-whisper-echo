@@ -24,9 +24,11 @@ export type Database = {
           created_at: string | null
           ethnicity: string | null
           face_style: string | null
+          generated_image_url: string | null
           hair_color: string | null
           hair_style: string | null
           id: string
+          image_prompt: string | null
           is_active: boolean | null
           is_template: boolean | null
           name: string
@@ -43,9 +45,11 @@ export type Database = {
           created_at?: string | null
           ethnicity?: string | null
           face_style?: string | null
+          generated_image_url?: string | null
           hair_color?: string | null
           hair_style?: string | null
           id?: string
+          image_prompt?: string | null
           is_active?: boolean | null
           is_template?: boolean | null
           name: string
@@ -62,9 +66,11 @@ export type Database = {
           created_at?: string | null
           ethnicity?: string | null
           face_style?: string | null
+          generated_image_url?: string | null
           hair_color?: string | null
           hair_style?: string | null
           id?: string
+          image_prompt?: string | null
           is_active?: boolean | null
           is_template?: boolean | null
           name?: string
@@ -176,14 +182,22 @@ export type Database = {
       }
       profiles: {
         Row: {
+          age: number | null
           avatar_url: string | null
           created_at: string | null
           daily_streak: number | null
           email: string | null
+          ethnicity: string | null
+          height: string | null
+          hobbies: string | null
           id: string
           last_daily_claim: string | null
+          onboarding_completed: boolean | null
+          past_relationships: string | null
           referral_code: string | null
           referred_by: string | null
+          relationship_goals: string | null
+          sexual_orientation: string | null
           subscription_tier: string | null
           tokens: number | null
           updated_at: string | null
@@ -191,14 +205,22 @@ export type Database = {
           username: string | null
         }
         Insert: {
+          age?: number | null
           avatar_url?: string | null
           created_at?: string | null
           daily_streak?: number | null
           email?: string | null
+          ethnicity?: string | null
+          height?: string | null
+          hobbies?: string | null
           id?: string
           last_daily_claim?: string | null
+          onboarding_completed?: boolean | null
+          past_relationships?: string | null
           referral_code?: string | null
           referred_by?: string | null
+          relationship_goals?: string | null
+          sexual_orientation?: string | null
           subscription_tier?: string | null
           tokens?: number | null
           updated_at?: string | null
@@ -206,14 +228,22 @@ export type Database = {
           username?: string | null
         }
         Update: {
+          age?: number | null
           avatar_url?: string | null
           created_at?: string | null
           daily_streak?: number | null
           email?: string | null
+          ethnicity?: string | null
+          height?: string | null
+          hobbies?: string | null
           id?: string
           last_daily_claim?: string | null
+          onboarding_completed?: boolean | null
+          past_relationships?: string | null
           referral_code?: string | null
           referred_by?: string | null
+          relationship_goals?: string | null
+          sexual_orientation?: string | null
           subscription_tier?: string | null
           tokens?: number | null
           updated_at?: string | null

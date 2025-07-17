@@ -8,7 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
-import { ArrowLeft, Sparkles, Heart, Zap, Crown, Star } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Sparkles, Heart, Zap, Crown, Star, Upload, Wand2, Camera } from "lucide-react";
 import { toast } from "sonner";
 
 interface GirlfriendCreatorProps {
@@ -27,6 +28,7 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
     hair_style: "",
     face_style: "",
     clothing_style: "",
+    image_prompt: "",
     personality_traits: {
       playfulness: [50],
       romance: [50],
@@ -39,6 +41,55 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
     }
   });
   const [loading, setLoading] = useState(false);
+  const [generatingImage, setGeneratingImage] = useState(false);
+  const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
+  const [uploadedImageFile, setUploadedImageFile] = useState<File | null>(null);
+
+  const generateImage = async () => {
+    if (!formData.image_prompt.trim()) {
+      toast.error("Please enter an image description");
+      return;
+    }
+
+    setGeneratingImage(true);
+    try {
+      const response = await supabase.functions.invoke('generate-image', {
+        body: { prompt: formData.image_prompt }
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      if (response.data?.image) {
+        setGeneratedImageUrl(response.data.image);
+        toast.success("Image generated successfully! ✨");
+      }
+    } catch (error) {
+      console.error('Error generating image:', error);
+      toast.error("Failed to generate image. Please try again.");
+    } finally {
+      setGeneratingImage(false);
+    }
+  };
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast.error("Image must be smaller than 5MB");
+        return;
+      }
+
+      setUploadedImageFile(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setGeneratedImageUrl(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+      toast.success("Image uploaded successfully!");
+    }
+  };
 
   const handleCreate = async () => {
     if (!formData.name.trim()) {
@@ -76,7 +127,9 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
         clothing_style: formData.clothing_style || "Casual",
         personality_traits: personalityTraits,
         behavior_settings: behaviorSettings,
-        avatar_url: "/lovable-uploads/02d0402a-da23-4e22-a4c4-79abaf1f12f8.png",
+        avatar_url: generatedImageUrl || "/lovable-uploads/02d0402a-da23-4e22-a4c4-79abaf1f12f8.png",
+        generated_image_url: generatedImageUrl,
+        image_prompt: formData.image_prompt,
         is_template: false,
         is_active: true
       });
@@ -130,10 +183,24 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
       </div>
 
       <div className="max-w-6xl mx-auto p-6 space-y-12 relative z-10">
-        {/* Preview Section */}
+        {/* Enhanced Preview Section with Image Generation */}
         <div className="text-center mb-12">
           <div className="glass-card p-8 max-w-md mx-auto">
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 mx-auto mb-4 pulse-glow"></div>
+            <div className="relative mb-6">
+              {generatedImageUrl ? (
+                <div className="w-32 h-32 rounded-full overflow-hidden mx-auto border-4 border-pink-500/50 pulse-glow">
+                  <img 
+                    src={generatedImageUrl} 
+                    alt={formData.name || "AI Girlfriend"} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="w-32 h-32 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 mx-auto pulse-glow flex items-center justify-center">
+                  <Camera className="h-12 w-12 text-white" />
+                </div>
+              )}
+            </div>
             <h3 className="text-2xl font-bold text-white mb-2">{formData.name || "Your AI Girlfriend"}</h3>
             <p className="text-gray-300">Age: {formData.age[0]} • Preview</p>
             <div className="flex justify-center mt-4 space-x-2">
@@ -292,6 +359,81 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
                 </Select>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        {/* Image Generation Section */}
+        <Card className="glass-card border-cyan-500/30">
+          <CardHeader>
+            <CardTitle className="text-3xl font-bold text-cyan-400 flex items-center">
+              <Camera className="h-8 w-8 mr-3 pulse-glow" />
+              Generate Her Image
+            </CardTitle>
+            <p className="text-gray-300 text-lg mt-2">Create the perfect visual representation of your companion</p>
+          </CardHeader>
+          <CardContent className="space-y-8 p-8">
+            <div>
+              <Label htmlFor="image_prompt" className="text-xl text-gray-300 mb-3 block">Describe Her Appearance ✨</Label>
+              <Textarea
+                id="image_prompt"
+                value={formData.image_prompt}
+                onChange={(e) => setFormData({...formData, image_prompt: e.target.value})}
+                placeholder="A beautiful woman with elegant features, long flowing hair, wearing a sophisticated dress, gentle smile..."
+                className="text-lg p-4 bg-black/50 border-cyan-500/30 text-white placeholder-gray-400 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/20 transition-all duration-300 min-h-[120px]"
+              />
+              <p className="text-sm text-gray-400 mt-2">💡 Be specific about features, clothing, style, and mood for best results</p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button
+                onClick={generateImage}
+                disabled={generatingImage || !formData.image_prompt.trim()}
+                className="glow-button text-lg px-8 py-4 text-white font-bold flex-1"
+              >
+                {generatingImage ? (
+                  <>
+                    <Sparkles className="mr-3 h-6 w-6 animate-spin" />
+                    Generating Magic...
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="mr-3 h-6 w-6" />
+                    Generate Her Image
+                  </>
+                )}
+              </Button>
+              
+              <div className="relative">
+                <Button
+                  variant="outline"
+                  className="text-lg px-8 py-4 border-2 border-cyan-400/40 text-cyan-400 hover:bg-cyan-400/10 hover:border-cyan-400 transition-all duration-300"
+                  onClick={() => document.getElementById('image-upload')?.click()}
+                >
+                  <Upload className="mr-3 h-6 w-6" />
+                  Upload Photo
+                </Button>
+                <input
+                  id="image-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                />
+              </div>
+            </div>
+
+            {generatedImageUrl && (
+              <div className="text-center">
+                <p className="text-cyan-400 font-semibold mb-4">✨ Perfect! Your companion's image is ready</p>
+                <div className="inline-block p-1 bg-gradient-to-r from-cyan-400 to-purple-400 rounded-lg">
+                  <img 
+                    src={generatedImageUrl} 
+                    alt="Generated companion" 
+                    className="w-48 h-48 object-cover rounded-md"
+                  />
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
 

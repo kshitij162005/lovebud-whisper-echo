@@ -124,20 +124,20 @@ const LandingPage = () => {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
-      {/* Static neon background orbs */}
+      {/* Subtle ambient background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-96 h-96 bg-pink-500/8 rounded-full blur-3xl"></div>
-        <div className="absolute top-60 right-20 w-80 h-80 bg-cyan-500/8 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-40 left-1/3 w-72 h-72 bg-purple-500/8 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 left-10 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-60 right-20 w-80 h-80 bg-cyan-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-40 left-1/3 w-72 h-72 bg-purple-500/5 rounded-full blur-3xl"></div>
       </div>
 
-      {/* Header */}
-      <header className="relative z-50 px-6 py-6 border-b-2 border-pink-500/30 backdrop-blur-md">
+      {/* Professional Header */}
+      <header className="relative z-50 px-6 py-6 border-b border-pink-500/20 glass-panel">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="relative">
-              <Heart className="h-10 w-10 text-pink-400 neon-pulse" />
-              <div className="absolute inset-0 h-10 w-10 bg-pink-400/30 rounded-full blur-md"></div>
+              <Heart className="h-10 w-10 text-pink-400 crisp-hover" />
+              <div className="absolute inset-0 h-10 w-10 bg-pink-400/20 rounded-full blur-md"></div>
             </div>
             <span className="text-3xl font-bold elegant-text bg-gradient-to-r from-pink-400 to-cyan-400 bg-clip-text text-transparent">
               LoveBud
@@ -147,7 +147,7 @@ const LandingPage = () => {
             <Button 
               variant="ghost" 
               onClick={handleLogin}
-              className="text-white hover:text-pink-400 hover:bg-pink-500/20 transition-all duration-200 crisp-hover neon-border"
+              className="text-white hover:text-pink-400 hover:bg-pink-500/10 transition-all duration-200 crisp-hover sharp-edges"
             >
               Login
             </Button>
