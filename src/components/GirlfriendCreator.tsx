@@ -155,7 +155,7 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
         clothing_style: formData.clothing_style || "Casual",
         personality_traits: personalityTraits,
         behavior_settings: behaviorSettings,
-        avatar_url: generatedImageUrl || "/lovable-uploads/02d0402a-da23-4e22-a4c4-79abaf1f12f8.png",
+        avatar_url: generatedImageUrl || "https://images.unsplash.com/photo-1494790108755-2616c6302589?w=400&h=400&fit=crop&crop=face",
         generated_image_url: generatedImageUrl,
         image_prompt: formData.image_prompt,
         is_template: false,
@@ -283,11 +283,11 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
                     <SelectValue placeholder="Choose ethnicity" />
                   </SelectTrigger>
                   <SelectContent className="bg-black border-pink-500/30">
-                    <SelectItem value="Caucasian">Caucasian</SelectItem>
-                    <SelectItem value="Latina">Latina 🔥</SelectItem>
-                    <SelectItem value="Asian">Asian 🌸</SelectItem>
-                    <SelectItem value="Ebony">Ebony 💎</SelectItem>
-                    <SelectItem value="Mixed">Mixed ✨</SelectItem>
+                    <SelectItem value="Caucasian" textValue="Caucasian">Caucasian</SelectItem>
+                    <SelectItem value="Latina" textValue="Latina">Latina 🔥</SelectItem>
+                    <SelectItem value="Asian" textValue="Asian">Asian 🌸</SelectItem>
+                    <SelectItem value="Ebony" textValue="Ebony">Ebony 💎</SelectItem>
+                    <SelectItem value="Mixed" textValue="Mixed">Mixed ✨</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -299,10 +299,10 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
                     <SelectValue placeholder="Select body type" />
                   </SelectTrigger>
                   <SelectContent className="bg-black border-pink-500/30">
-                    <SelectItem value="Skinny">Skinny</SelectItem>
-                    <SelectItem value="Fit">Fit 💪</SelectItem>
-                    <SelectItem value="Average">Average</SelectItem>
-                    <SelectItem value="Curvy">Curvy 🍑</SelectItem>
+                    <SelectItem value="Skinny" textValue="Skinny">Skinny</SelectItem>
+                    <SelectItem value="Fit" textValue="Fit">Fit 💪</SelectItem>
+                    <SelectItem value="Average" textValue="Average">Average</SelectItem>
+                    <SelectItem value="Curvy" textValue="Curvy">Curvy 🍑</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -327,11 +327,11 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
                     <SelectValue placeholder="Choose hair color" />
                   </SelectTrigger>
                   <SelectContent className="bg-black border-purple-500/30">
-                    <SelectItem value="Blonde">Blonde ✨</SelectItem>
-                    <SelectItem value="Brunette">Brunette 🤎</SelectItem>
-                    <SelectItem value="Black">Black 🖤</SelectItem>
-                    <SelectItem value="Red">Red 🔥</SelectItem>
-                    <SelectItem value="Brown">Brown</SelectItem>
+                    <SelectItem value="Blonde" textValue="Blonde">Blonde ✨</SelectItem>
+                    <SelectItem value="Brunette" textValue="Brunette">Brunette 🤎</SelectItem>
+                    <SelectItem value="Black" textValue="Black">Black 🖤</SelectItem>
+                    <SelectItem value="Red" textValue="Red">Red 🔥</SelectItem>
+                    <SelectItem value="Brown" textValue="Brown">Brown</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -343,12 +343,12 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
                     <SelectValue placeholder="Select hair style" />
                   </SelectTrigger>
                   <SelectContent className="bg-black border-purple-500/30">
-                    <SelectItem value="Long Straight">Long Straight</SelectItem>
-                    <SelectItem value="Long Wavy">Long Wavy 🌊</SelectItem>
-                    <SelectItem value="Long Curly">Long Curly 🌀</SelectItem>
-                    <SelectItem value="Medium Straight">Medium Straight</SelectItem>
-                    <SelectItem value="Medium Wavy">Medium Wavy</SelectItem>
-                    <SelectItem value="Short">Short & Sexy</SelectItem>
+                    <SelectItem value="Long Straight" textValue="Long Straight">Long Straight</SelectItem>
+                    <SelectItem value="Long Wavy" textValue="Long Wavy">Long Wavy 🌊</SelectItem>
+                    <SelectItem value="Long Curly" textValue="Long Curly">Long Curly 🌀</SelectItem>
+                    <SelectItem value="Medium Straight" textValue="Medium Straight">Medium Straight</SelectItem>
+                    <SelectItem value="Medium Wavy" textValue="Medium Wavy">Medium Wavy</SelectItem>
+                    <SelectItem value="Short" textValue="Short">Short & Sexy</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -362,11 +362,11 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
                     <SelectValue placeholder="Choose face style" />
                   </SelectTrigger>
                   <SelectContent className="bg-black border-purple-500/30">
-                    <SelectItem value="Natural">Natural Beauty</SelectItem>
-                    <SelectItem value="Sexy">Sexy & Sultry 🔥</SelectItem>
-                    <SelectItem value="Cute">Cute & Sweet 🥰</SelectItem>
-                    <SelectItem value="Smiling">Always Smiling 😊</SelectItem>
-                    <SelectItem value="Elegant">Elegant & Classy 👑</SelectItem>
+                    <SelectItem value="Natural" textValue="Natural">Natural Beauty</SelectItem>
+                    <SelectItem value="Sexy" textValue="Sexy">Sexy & Sultry 🔥</SelectItem>
+                    <SelectItem value="Cute" textValue="Cute">Cute & Sweet 🥰</SelectItem>
+                    <SelectItem value="Smiling" textValue="Smiling">Always Smiling 😊</SelectItem>
+                    <SelectItem value="Elegant" textValue="Elegant">Elegant & Classy 👑</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -378,11 +378,11 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
                     <SelectValue placeholder="Select style" />
                   </SelectTrigger>
                   <SelectContent className="bg-black border-purple-500/30">
-                    <SelectItem value="Casual">Casual & Comfy</SelectItem>
-                    <SelectItem value="Elegant">Elegant & Sophisticated</SelectItem>
-                    <SelectItem value="Sporty">Sporty & Active 🏃‍♀️</SelectItem>
-                    <SelectItem value="Cute">Cute & Girly 🎀</SelectItem>
-                    <SelectItem value="Classy">Classy & Chic</SelectItem>
+                    <SelectItem value="Casual" textValue="Casual">Casual & Comfy</SelectItem>
+                    <SelectItem value="Elegant" textValue="Elegant">Elegant & Sophisticated</SelectItem>
+                    <SelectItem value="Sporty" textValue="Sporty">Sporty & Active 🏃‍♀️</SelectItem>
+                    <SelectItem value="Cute" textValue="Cute">Cute & Girly 🎀</SelectItem>
+                    <SelectItem value="Classy" textValue="Classy">Classy & Chic</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

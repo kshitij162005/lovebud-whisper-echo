@@ -1,5 +1,4 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { HfInference } from 'https://esm.sh/@huggingface/inference@2.3.2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -14,8 +13,10 @@ serve(async (req) => {
 
   try {
     const { prompt, imageData } = await req.json()
+    console.log('Request received:', { hasPrompt: !!prompt, hasImageData: !!imageData })
 
     if (!prompt && !imageData) {
+      console.error('Missing required data')
       return new Response(
         JSON.stringify({ error: 'Prompt or image data is required' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
@@ -31,51 +32,50 @@ serve(async (req) => {
       )
     }
 
-    const hf = new HfInference(hfToken)
-
-    let image;
+    console.log('Using HuggingFace token available')
     
-    if (imageData) {
-      // Convert uploaded photo to AI-generated style
-      console.log('Processing uploaded image for AI conversion')
-      const enhancedPrompt = `Transform this into a beautiful AI-generated portrait, ${prompt || 'elegant and classy style'}, professional photography, high quality, detailed face, soft lighting, photorealistic, studio lighting`
-      
-      // Use image-to-image generation for photo conversion
-      image = await hf.imageToImage({
-        inputs: imageData,
-        parameters: {
-          prompt: enhancedPrompt,
-          guidance_scale: 7.5,
-          num_inference_steps: 20,
-          strength: 0.8 // Higher strength for more transformation
-        },
-        model: 'runwayml/stable-diffusion-v1-5'
-      })
-    } else {
-      // Text-to-image generation
-      console.log('Generating image from text prompt')
-      const enhancedPrompt = `Portrait of a beautiful woman, ${prompt}, professional photography, high quality, detailed face, soft lighting, elegant pose, photorealistic, studio lighting, 8k resolution`
+    // For now, let's use a simple approach that works
+    const enhancedPrompt = imageData 
+      ? `Transform this into a beautiful AI-generated portrait, ${prompt || 'elegant and classy style'}, professional photography, high quality, detailed face, soft lighting, photorealistic, studio lighting`
+      : `Portrait of a beautiful woman, ${prompt}, professional photography, high quality, detailed face, soft lighting, elegant pose, photorealistic, studio lighting, 8k resolution`
 
-      image = await hf.textToImage({
+    console.log('Making request to HuggingFace API with prompt:', enhancedPrompt)
+
+    // Use fetch directly to HuggingFace API for better error handling
+    const response = await fetch('https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-schnell', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${hfToken}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
         inputs: enhancedPrompt,
-        model: 'black-forest-labs/FLUX.1-schnell',
         parameters: {
-          guidance_scale: 3.5,
-          num_inference_steps: 4,
           width: 512,
-          height: 512
+          height: 512,
+          num_inference_steps: 4
         }
       })
+    })
+
+    console.log('HuggingFace API response status:', response.status)
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error('HuggingFace API error:', errorText)
+      throw new Error(`HuggingFace API error: ${response.status} ${errorText}`)
     }
 
-    // Convert the blob to a base64 string
-    const arrayBuffer = await image.arrayBuffer()
+    const imageBlob = await response.blob()
+    const arrayBuffer = await imageBlob.arrayBuffer()
     const base64 = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)))
+
+    console.log('Successfully generated image, base64 length:', base64.length)
 
     return new Response(
       JSON.stringify({ 
         image: `data:image/png;base64,${base64}`,
-        prompt: prompt
+        prompt: enhancedPrompt
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )
