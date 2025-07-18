@@ -13,30 +13,60 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt } = await req.json()
+    const { prompt, imageData } = await req.json()
 
-    if (!prompt) {
+    if (!prompt && !imageData) {
       return new Response(
-        JSON.stringify({ error: 'Prompt is required' }),
+        JSON.stringify({ error: 'Prompt or image data is required' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       )
     }
 
-    const hf = new HfInference(Deno.env.get('HUGGING_FACE_ACCESS_TOKEN'))
+    const hfToken = Deno.env.get('HUGGING_FACE_ACCESS_TOKEN')
+    if (!hfToken) {
+      console.error('HUGGING_FACE_ACCESS_TOKEN not found')
+      return new Response(
+        JSON.stringify({ error: 'API configuration error' }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      )
+    }
 
-    // Enhanced prompt for better AI girlfriend generation
-    const enhancedPrompt = `Portrait of a beautiful woman, ${prompt}, professional photography, high quality, detailed face, soft lighting, elegant pose, photorealistic, studio lighting, 8k resolution`
+    const hf = new HfInference(hfToken)
 
-    const image = await hf.textToImage({
-      inputs: enhancedPrompt,
-      model: 'stabilityai/stable-diffusion-2-1',
-      parameters: {
-        guidance_scale: 7.5,
-        num_inference_steps: 30,
-        width: 512,
-        height: 512
-      }
-    })
+    let image;
+    
+    if (imageData) {
+      // Convert uploaded photo to AI-generated style
+      console.log('Processing uploaded image for AI conversion')
+      const enhancedPrompt = `Transform this into a beautiful AI-generated portrait, ${prompt || 'elegant and classy style'}, professional photography, high quality, detailed face, soft lighting, photorealistic, studio lighting`
+      
+      // Use image-to-image generation for photo conversion
+      image = await hf.imageToImage({
+        inputs: imageData,
+        parameters: {
+          prompt: enhancedPrompt,
+          guidance_scale: 7.5,
+          num_inference_steps: 20,
+          strength: 0.8 // Higher strength for more transformation
+        },
+        model: 'runwayml/stable-diffusion-v1-5'
+      })
+    } else {
+      // Text-to-image generation
+      console.log('Generating image from text prompt')
+      const enhancedPrompt = `Portrait of a beautiful woman, ${prompt}, professional photography, high quality, detailed face, soft lighting, elegant pose, photorealistic, studio lighting, 8k resolution`
+
+      image = await hf.textToImage({
+        inputs: enhancedPrompt,
+        model: 'black-forest-labs/FLUX.1-schnell',
+        parameters: {
+          guidance_scale: 3.5,
+          num_inference_steps: 4,
+          width: 512,
+          height: 512
+        }
+      })
+    }
 
     // Convert the blob to a base64 string
     const arrayBuffer = await image.arrayBuffer()
@@ -45,7 +75,7 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({ 
         image: `data:image/png;base64,${base64}`,
-        prompt: enhancedPrompt
+        prompt: prompt
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     )

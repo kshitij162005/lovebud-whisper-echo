@@ -73,6 +73,32 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
     }
   };
 
+  const convertPhotoToAI = async (imageDataUrl: string) => {
+    setGeneratingImage(true);
+    try {
+      const response = await supabase.functions.invoke('generate-image', {
+        body: { 
+          imageData: imageDataUrl,
+          prompt: "Transform into an AI-generated portrait with elegant features, maintaining facial structure but stylized and artistic"
+        }
+      });
+
+      if (response.error) {
+        throw new Error(response.error.message);
+      }
+
+      if (response.data?.image) {
+        setGeneratedImageUrl(response.data.image);
+        toast.success("Photo converted to AI-generated image! ✨");
+      }
+    } catch (error) {
+      console.error('Error converting photo:', error);
+      toast.error("Failed to convert photo. Please try again.");
+    } finally {
+      setGeneratingImage(false);
+    }
+  };
+
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -84,10 +110,12 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
       setUploadedImageFile(file);
       const reader = new FileReader();
       reader.onload = (e) => {
-        setGeneratedImageUrl(e.target?.result as string);
+        const imageDataUrl = e.target?.result as string;
+        // Convert uploaded photo to AI-generated version for privacy
+        convertPhotoToAI(imageDataUrl);
       };
       reader.readAsDataURL(file);
-      toast.success("Image uploaded successfully!");
+      toast.success("Converting your photo to AI-generated style...");
     }
   };
 
@@ -370,6 +398,10 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
               Generate Her Image
             </CardTitle>
             <p className="text-gray-300 text-lg mt-2">Create the perfect visual representation of your companion</p>
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mt-4">
+              <p className="text-cyan-400 font-semibold">🔒 Privacy Protected</p>
+              <p className="text-gray-300 text-sm mt-1">Uploaded photos are automatically converted to AI-generated versions to protect your privacy while maintaining facial features.</p>
+            </div>
           </CardHeader>
           <CardContent className="space-y-8 p-8">
             <div>
@@ -408,9 +440,10 @@ const GirlfriendCreator = ({ user, onBack, onCreated }: GirlfriendCreatorProps) 
                   variant="outline"
                   className="text-lg px-8 py-4 border-2 border-cyan-400/40 text-cyan-400 hover:bg-cyan-400/10 hover:border-cyan-400 transition-all duration-300"
                   onClick={() => document.getElementById('image-upload')?.click()}
+                  disabled={generatingImage}
                 >
                   <Upload className="mr-3 h-6 w-6" />
-                  Upload Photo
+                  {generatingImage ? 'Converting...' : 'Upload & Convert Photo'}
                 </Button>
                 <input
                   id="image-upload"
