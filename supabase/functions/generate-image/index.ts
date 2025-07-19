@@ -25,14 +25,14 @@ serve(async (req) => {
 
     const hfToken = Deno.env.get('HUGGING_FACE_ACCESS_TOKEN')
     if (!hfToken) {
-      console.error('HUGGING_FACE_ACCESS_TOKEN not found')
+      console.error('HUGGING_FACE_ACCESS_TOKEN not found in environment')
       return new Response(
         JSON.stringify({ error: 'API configuration error' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
       )
     }
 
-    console.log('Using HuggingFace token available')
+    console.log('HuggingFace token found, length:', hfToken.length)
     
     // For now, let's use a simple approach that works
     const enhancedPrompt = imageData 
