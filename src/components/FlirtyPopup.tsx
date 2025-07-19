@@ -15,21 +15,21 @@ const flirtyMessages: FlirtyMessage[] = [
     id: 1,
     name: "Aria",
     message: "Hey there, care to chat? 😘",
-    avatar: "/lovable-uploads/02d0402a-da23-4e22-a4c4-79abaf1f12f8.png",
+    avatar: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     mood: "playful"
   },
   {
     id: 2,
     name: "Jade",
     message: "I've been waiting for someone like you ❤️",
-    avatar: "/lovable-uploads/02d0402a-da23-4e22-a4c4-79abaf1f12f8.png",
+    avatar: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     mood: "romantic"
   },
   {
     id: 3,
     name: "Luna",
     message: "Want to get to know each other? 💫",
-    avatar: "/lovable-uploads/02d0402a-da23-4e22-a4c4-79abaf1f12f8.png",
+    avatar: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
     mood: "curious"
   }
 ];
